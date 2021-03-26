@@ -396,7 +396,7 @@ test.group('Command', (group) => {
   test('create a new file to a given location', async (assert) => {
     const command = new Command()
     const foo = path.join(__dirname, '/foo.js')
-    await command.writeFile(foo, `module.exports = 2`)
+    await command.writeFile(foo, 'module.exports = 2')
     assert.equal(require(foo), 2)
     await command.removeFile(foo)
   })
@@ -405,7 +405,7 @@ test.group('Command', (group) => {
     const command = new Command()
     const tmp = path.join(__dirname, '/tmp')
     const foo = path.join(tmp, 'foo.js')
-    await command.writeFile(foo, `module.exports = 2`)
+    await command.writeFile(foo, 'module.exports = 2')
     await command.emptyDir(tmp)
     assert.isTrue((await command.pathExists(tmp)))
     await command.removeDir(tmp)
@@ -454,7 +454,7 @@ test.group('Command', (group) => {
 
   test('generate file from template', async (assert) => {
     const command = new Command()
-    await command.generateFile(path.join(__dirname, 'sample.js'), `module.exports = '{{ name }}'`, { name: 'virk' })
+    await command.generateFile(path.join(__dirname, 'sample.js'), 'module.exports = \'{{ name }}\'', { name: 'virk' })
     assert.equal(require(path.join(__dirname, 'sample.js')), 'virk')
     await command.removeFile(path.join(__dirname, 'sample.js'))
   })
@@ -462,10 +462,10 @@ test.group('Command', (group) => {
   test('throw exception when file already exists', async (assert) => {
     assert.plan(1)
     const command = new Command()
-    await command.generateFile(path.join(__dirname, 'sample.js'), `module.exports = '{{ name }}'`, { name: 'virk' })
+    await command.generateFile(path.join(__dirname, 'sample.js'), 'module.exports = \'{{ name }}\'', { name: 'virk' })
 
     try {
-      await command.generateFile(path.join(__dirname, 'sample.js'), `module.exports = '{{ name }}'`, { name: 'virk' })
+      await command.generateFile(path.join(__dirname, 'sample.js'), 'module.exports = \'{{ name }}\'', { name: 'virk' })
     } catch ({ message }) {
       assert.match(message, /already exists/)
     }
