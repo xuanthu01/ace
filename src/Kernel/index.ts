@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+import omelette from 'omelette'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { Hooks } from '../Hooks'
@@ -28,6 +28,7 @@ import {
   CommandConstructorContract,
 } from '../Contracts'
 import { logger } from '@poppinss/cliui'
+import { sortAndGroupCommands } from '../utils/sortAndGroupCommands'
 
 /**
  * Ace kernel class is used to register, find and invoke commands by
@@ -684,5 +685,26 @@ export class Kernel implements KernelContract {
     }
 
     await this.exitProcess(error)
+  }
+
+  /**
+   * Autocomplete grouped command
+   */
+  public initAutocomplete() {
+    const completion = omelette('node ace')
+    // Autocomplete commands
+    const { commands } = this.getAllCommandsAndAliases()
+    const groupedCommands = sortAndGroupCommands(commands)
+    groupedCommands.forEach((group) => {
+      completion.on(group.group, ({ reply }) => {
+        const commandList = group.commands.map((c) => c.commandName)
+        reply(commandList)
+      })
+    })
+
+    // TODO: Autocomplete flags
+
+    //Init completion
+    completion.init()
   }
 }
